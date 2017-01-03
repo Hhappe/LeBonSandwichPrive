@@ -29,7 +29,7 @@ else
 	else
 	{
 		$res = model\commande::select('id', 'dateretrait')->get();
-		$tab = array("nb" => $res->count(), "commandeses" => $res);
+		$tab = array("nb" => $res->count(), "commandes" => $res);
 		$json = json_encode($tab);
 		
 		header("Content-Type: application/json");

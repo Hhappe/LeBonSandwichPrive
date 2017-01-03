@@ -20,4 +20,16 @@ class lbsview
 		$resp->getBody()->write($json);
 		return $resp;
 	}
+
+	public function render($selector, $req, $resp, $args)
+	{
+		switch($selector)
+		{
+			case "toutesCommandes":
+				$this->resp = $this->toutesCommandes($req, $resp, $args);
+				break;
+		}
+
+		return $this->resp;
+	}
 }
