@@ -61,4 +61,12 @@ $app->get('/commandes',
 	}
 )->setName('toutesCommandes');
 
+
+$app->get('/commandes/{id}',
+	function (Request $req, Response $resp, $args)
+	{
+		return (new lbs\control\lbscontrol($this))->detailsCommande($req, $resp, $args);
+	}
+)->setName('detailsCommande');
+
 $app->run();

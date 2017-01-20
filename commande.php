@@ -21,14 +21,18 @@ else
 	{
 		$cat = new model\commande();
 		$cat->dateretrait = $_POST["dateretrait"];
-		$cat->description = $_POST["etat"];
+		$cat->etat = $_POST["etat"];
 		$cat->save();
 		
 		http_response_code(201);
 	}
 	else
 	{
-		$res = model\commande::select('id', 'dateretrait')->get();
+		$res = model\commande::select('id', 'montant', 'dateretrait', 'etat')
+								->orderBy('dateretrait')
+								->take($size)
+								->offset($offset)
+								->get();
 		$tab = array("nb" => $res->count(), "commandes" => $res);
 		$json = json_encode($tab);
 		

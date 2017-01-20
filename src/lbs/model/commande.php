@@ -8,4 +8,9 @@ class commande extends \Illuminate\Database\Eloquent\Model
 	protected $primaryKey = 'id';
 	
 	public $timestamps = false;
+
+	public function sandwichCommande()
+	{
+		return $this->belongsToMany("\lbs\model\sandwich","id","id");
+	}
 }
