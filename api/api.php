@@ -106,4 +106,11 @@ $app->get('/commandes/{id}',
 	}
 )->setName('detailsCommande');
 
+$app->post('/commandes/{id}',
+	function (Request $req, Response $resp, $args)
+	{
+		return (new lbs\control\lbscontrol($this))->changementEtat($req, $resp, $args);
+	}
+)->setName('changementEtat');
+
 $app->run();

@@ -15,7 +15,21 @@ class lbsview
 
 	private function toutesCommandes($req, $resp)
 	{
-		$json = '{ "commandes" : '.$this->data.' , "links" : { "all" : { "href" : "/commandes" } "previous" : { "href" : "/commandes?limit=20&offset=0" } "next" : { "href" : "/commandes?limit=20&offset=20" }';
+		// Vérifier offset
+		$links = "";
+		if($this->data[1] != null)
+		{
+			$previous = $this->data[1] - $this->data[1];
+			if($this->data[1] == 0)
+			{
+				$previous = $this->data[1];
+			}
+			$next = $this->data[1];
+			
+			$links = ' , "previous" : { "href" : "/commandes?limit='.$this->data[1].'&offset='.$previous.'" } , "next" : { "href" : "/commandes?limit='.$this->data[1].'&offset='.$next.'" }';
+		}
+		
+		$json = '{ "commandes" : '.$this->data[0].' , "links" : { "all" : { "href" : "/commandes" } '.$links.' }';
 		$resp = $resp->withStatus(200)->withHeader('Content-Type', 'application/json');
 		$resp->getBody()->write($json);
 		return $resp;
@@ -43,14 +57,22 @@ class lbsview
 		return $resp;
     }
 
-	private function filtrageCommandes($req, $resp)
-	{
-		
-	}
-
 	private function changementEtat($req, $resp)
 	{
-		
+		if(is_array($this->data))
+		{
+			$status = $this->getStatus();
+			$json = json_encode($this->data);
+			$resp = $resp->withStatus($status)->withHeader('Content-Type', 'application/json');
+		}
+		else
+		{
+			$obj = $this->data;
+			$json = '{ "etat" : '.$obj->etat.' , "links" : { "details" : { "href" : "/commandes/'.$obj->id.'" } } }';
+			$resp = $resp->withStatus(200)->withHeader('Content-Type', 'application/json');
+		}
+		$resp->getBody()->write($json);
+		return $resp;
 	}
 
 	public function render($selector, $req, $resp, $args)
@@ -62,9 +84,6 @@ class lbsview
 				break;
 			case "detailsCommande":
 				$this->resp = $this->detailsCommande($req, $resp, $args);
-				break;
-			case "filtrageCommandes":
-				$this->resp = $this->filtrageCommandes($req, $resp, $args);
 				break;
 			case "changementEtat":
 				$this->resp = $this->changementEtat($req, $resp, $args);
